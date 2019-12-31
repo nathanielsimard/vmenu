@@ -14,7 +14,7 @@ function! s:Keybinding.execute() abort
     throw 'Not Implemented'
 endfunction
 
-function! vmenu#keybinding(key, description) abort
+function! vmenu#keybinding#new(key, description) abort
     return s:Keybinding.new(a:key, a:description)
 endfunction
 

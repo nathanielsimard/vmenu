@@ -2,7 +2,7 @@
 " Keybinding which show the menu with sub-keybindings.
 let s:CategoryKeybinding={}
 function! s:CategoryKeybinding.new(key, description, menu) abort
-    let l:newCategoryKeybinding = vmenu#keybinding(a:key, '+'.a:description)
+    let l:newCategoryKeybinding = vmenu#keybinding#new(a:key, '+'.a:description)
     let l:newCategoryKeybinding.menu = a:menu
     let l:newCategoryKeybinding.keybindings = {}
     return extend(l:newCategoryKeybinding, copy(self))
@@ -20,7 +20,7 @@ function! s:CategoryKeybinding.execute() abort
     call self.menu.show(self.title(), self.keybindings)
 endfunction
 
-function! vmenu#keybinding#category(key, description, menu) abort
+function! vmenu#keybinding#category#new(key, description, menu) abort
     return s:CategoryKeybinding.new(a:key, a:description, a:menu)
 endfunction
 

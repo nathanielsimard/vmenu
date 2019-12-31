@@ -2,7 +2,7 @@
 " Category keybinding aware of current filetype
 let s:FiletypeKeybinding={}
 function! s:FiletypeKeybinding.new(key, description, menu) abort
-    let l:keybinding = vmenu#keybinding#category(a:key, a:description, a:menu)
+    let l:keybinding = vmenu#keybinding#category#new(a:key, a:description, a:menu)
     let l:keybinding.filetype_keybindings = {}
     return extend(l:keybinding, copy(self))
 endfunction
@@ -42,5 +42,9 @@ function! s:FiletypeKeybinding.current_filetype() abort
     else
         return &filetype
     endif
+endfunction
+
+function! vmenu#keybinding#filetype#new(key, description, menu) abort
+    return s:FiletypeKeybinding.new(a:key, a:description, a:menu)
 endfunction
 
