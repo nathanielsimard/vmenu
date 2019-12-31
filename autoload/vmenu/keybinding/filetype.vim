@@ -32,16 +32,16 @@ function! s:FiletypeKeybinding.execute() abort
 endfunction
 
 function! s:FiletypeKeybinding.current_filetype() abort
-    if self.menu.state == g:vmenu#STATE_SHOWING
+    let l:filetype = &filetype
+    if l:filetype ==# 'vmenu'
         " Select the buffer type of the previous window
         " because the current one is the keybinding menu.
         wincmd p
-        let l:tmp = &filetype
+        let l:filetype = &filetype
         wincmd p
-        return l:tmp
-    else
-        return &filetype
     endif
+
+    return l:filetype
 endfunction
 
 function! vmenu#keybinding#filetype#new(key, description, menu) abort

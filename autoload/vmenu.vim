@@ -159,7 +159,7 @@ function! s:BufferWindow.open() abort
     execute 'split '.self.name
     let self.win = win_getid()
     wincmd J
-    setlocal filetype=keybindingMenu
+    setlocal filetype=vmenu
     setlocal buftype=nofile
     setlocal norelativenumber
     setlocal nonumber
@@ -193,7 +193,7 @@ function! s:FloatingWindow.open() abort
     let self.win = nvim_open_win(l:buf, v:true, opts)
     call setline(1, self.text)
 
-    setlocal filetype=keybindingMenu
+    setlocal filetype=vmenu
     setlocal buftype=nofile
     setlocal norelativenumber
     setlocal nonumber
