@@ -119,7 +119,7 @@ function! s:VMenu.draw() abort
     endif
 
     call self.close_window()
-    if g:vmenu#type ==# 'floating'
+    if g:vmenu#type ==# 'floating' && has('nvim')
         let self.current_window = s:FloatingWindow.new(l:text)
     else
         let self.current_window = s:BufferWindow.new(l:text)
@@ -135,14 +135,11 @@ let s:Window={}
 function! s:Window.new(text) abort
     let l:newWindow = copy(self)
     let l:newWindow.text = a:text
-    let l:newWindow.win = -1
     return l:newWindow
 endfunction
 
 function! s:Window.close() abort
-    if self.win !=# -1
-        call nvim_win_close(self.win, 1)
-    endif
+    throw 'Not implemented'
 endfunction
 
 function! s:Window.open() abort
@@ -157,13 +154,22 @@ let s:BufferWindow={}
 function! s:BufferWindow.new(text) abort
     let l:newBufferWindow = s:Window.new(a:text)
     let l:newBufferWindow.name = 'BufferWindow'
+    let l:newBufferWindow.open = 0
     return extend(l:newBufferWindow, copy(self))
 endfunction
 
+function! s:BufferWindow.close() abort
+    if self.open ==# 1
+        echo 'close'
+        q
+    endif
+endfunction
+
 function! s:BufferWindow.open() abort
+    echo 'open'
     execute 'split '.self.name
-    let self.win = win_getid()
     wincmd J
+    let self.open = 1
     setlocal filetype=vmenu
     setlocal buftype=nofile
     setlocal norelativenumber
@@ -180,7 +186,14 @@ endfunction
 let s:FloatingWindow={}
 function! s:FloatingWindow.new(text) abort
     let l:newFloatingWindow = s:Window.new(a:text)
+    let l:newFloatingWindow.win = -1
     return extend(l:newFloatingWindow, copy(self))
+endfunction
+
+function! s:FloatingWindow.close() abort
+    if self.win !=# -1
+        call nvim_win_close(self.win, 1)
+    endif
 endfunction
 
 function! s:FloatingWindow.open() abort
