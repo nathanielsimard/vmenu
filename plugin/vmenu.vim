@@ -14,8 +14,4 @@ let g:vmenu#type='floating'
 let g:vmenu#show = 1
 let g:vmenu#delay = 300
 
-" Global Menu State
-let g:vmenu#STATE_INACTIVE='inactive'
-let g:vmenu#STATE_SHOWING='showing'
-let g:vmenu#STATE_HIDING='hiding'
 

@@ -1,12 +1,17 @@
 " User can interup the menu with <ESC>
 let s:UserInteruptionException='User Interuption Exception'
 
+" Global Menu State
+let s:STATE_INACTIVE='inactive'
+let s:STATE_SHOWING='showing'
+let s:STATE_HIDING='hiding'
+
 " Menu Class
 let s:VMenu={}
 function! s:VMenu.new() abort
     let l:newMenu = copy(self)
     let l:newMenu.timer_id = -1
-    let l:newMenu.state = g:vmenu#STATE_INACTIVE
+    let l:newMenu.state = s:STATE_INACTIVE
     let l:newMenu.current_window = {}
     let l:newMenu.title = ''
     let l:newMenu.keybindings = {}
@@ -17,10 +22,10 @@ function! s:VMenu.show(title, keybindings) abort
     let self.title = a:title
     let self.keybindings = a:keybindings
 
-    if self.state == g:vmenu#STATE_SHOWING
+    if self.state == s:STATE_SHOWING
         call self.draw()
     else
-        let self.state = g:vmenu#STATE_HIDING
+        let self.state = s:STATE_HIDING
         let self.timer_id = timer_start(g:vmenu#delay, self.show_after_timer)
     endif
 
@@ -36,7 +41,7 @@ function! s:VMenu.show(title, keybindings) abort
 endfunction
 
 function! s:VMenu.close() abort
-    let self.state = g:vmenu#STATE_INACTIVE
+    let self.state = s:STATE_INACTIVE
     call self.close_window()
 endfunction
 
@@ -49,8 +54,8 @@ endfunction
 
 
 function! s:VMenu.show_after_timer(timer_id) abort
-    if self.timer_id == a:timer_id && self.state == g:vmenu#STATE_HIDING
-        let self.state = g:vmenu#STATE_SHOWING
+    if self.timer_id == a:timer_id && self.state == s:STATE_HIDING
+        let self.state = s:STATE_SHOWING
         call self.draw()
     endif
 endfunction

@@ -12,6 +12,7 @@ let s:Test = Test('Filetype Keybinding Test')
 
 function s:Test.before_each()
     let self.menu = g:FakeMenu.new()
+    setlocal filetype=test
 endfunction
 
 function s:Test.test_GivenKeybindingsWithoutFiletype_WhenExecute_ShouldAssignEachKeybindingToItsKey()
