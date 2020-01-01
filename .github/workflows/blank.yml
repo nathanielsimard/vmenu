@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -11,6 +11,13 @@ jobs:
       with:
         python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
         architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
-    - name: Vint
+    - name: Lint
       run: ./scripts/lint.sh
+    - name: Install Vim 
+      run: sudo apt-get install vim
+    - name: Install Neovim
+      run: sudo apt-get install neovim
+    - name: Test
+      run: ./scripts/lint.sh
+
 
