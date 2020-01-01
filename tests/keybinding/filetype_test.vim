@@ -16,10 +16,10 @@ function s:Test.before_each()
 endfunction
 
 function s:Test.test_GivenKeybindingsWithoutFiletype_WhenExecute_ShouldAssignEachKeybindingToItsKey()
-    let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION, self.menu)
+    let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION)
     let l:sub_keybindings = self.givenKeybindings(l:keybinding)
 
-    call l:keybinding.execute()
+    call l:keybinding.execute(self.menu)
 
     let l:actual_keybindings = self.menu.showed_args['keybindings'] 
     for sub_keybinding in l:sub_keybindings
@@ -28,11 +28,11 @@ function s:Test.test_GivenKeybindingsWithoutFiletype_WhenExecute_ShouldAssignEac
 endfunction
 
 function s:Test.test_GivenKeybindingsWithFiletype_WhenExecuteWithSameFiletype_ShouldAssignEachKeybindingToItsKey()
-    let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION, self.menu)
+    let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION)
     let l:sub_keybindings = self.givenFiletypeKeybindings(s:FILETYPE, l:keybinding)
 
     execute 'setlocal filetype='.s:FILETYPE
-    call l:keybinding.execute()
+    call l:keybinding.execute(self.menu)
 
     let l:actual_keybindings = self.menu.showed_args['keybindings'] 
     for sub_keybinding in l:sub_keybindings
@@ -41,7 +41,7 @@ function s:Test.test_GivenKeybindingsWithFiletype_WhenExecuteWithSameFiletype_Sh
 endfunction
 
 function s:Test.test_GivenPreviousFiletype_WhenCurrentFiletypeVMenu_ShouldReturnPreviousFiletype()
-    let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION, self.menu)
+    let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION)
 
     execute 'setlocal filetype='.s:FILETYPE
     split vmenu
@@ -54,33 +54,33 @@ function s:Test.test_GivenPreviousFiletype_WhenCurrentFiletypeVMenu_ShouldReturn
 endfunction
 
 function s:Test.test_GivenKeybindingsWithFiletype_WhenExecuteWithDifferentFiletype_ShouldShowNoKeybinding()
-    let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION, self.menu)
+    let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION)
     let l:sub_keybindings = self.givenFiletypeKeybindings(s:FILETYPE, l:keybinding)
 
     execute 'setlocal filetype='.s:OTHER_FILETYPE
-    call l:keybinding.execute()
+    call l:keybinding.execute(self.menu)
 
     let l:actual_keybindings = self.menu.showed_args['keybindings'] 
     call self.assert_equal(len(l:actual_keybindings), 0)
 endfunction
 
 function s:Test.test_GivenKeybindingsWithFiletype_WhenExecuteWithDifferentFiletype_ShouldCloseMenu()
-    let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION, self.menu)
+    let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION)
     let l:sub_keybindings = self.givenFiletypeKeybindings(s:FILETYPE, l:keybinding)
 
     execute 'setlocal filetype='.s:OTHER_FILETYPE
-    call l:keybinding.execute()
+    call l:keybinding.execute(self.menu)
 
     call self.assert_true(self.menu.closed)
 endfunction
 
 function s:Test.test_GivenKeybindingsWithoutFiletypeAndWithFiletype_WhenExecuteWithSameFiletype_ShouldShowAllKeybindings()
-    let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION, self.menu)
+    let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION)
     let l:sub_keybindings = self.givenKeybindings(l:keybinding)
     let l:sub_keybindings = l:sub_keybindings + self.givenFiletypeKeybindings(s:FILETYPE, l:keybinding)
 
     execute 'setlocal filetype='.s:FILETYPE
-    call l:keybinding.execute()
+    call l:keybinding.execute(self.menu)
 
     let l:actual_keybindings = self.menu.showed_args['keybindings'] 
     for sub_keybinding in l:sub_keybindings
@@ -90,12 +90,12 @@ endfunction
 
 
 function s:Test.test_GivenKeybindingsWithoutFiletypeAndWithFiletype_WhenExecuteWithDifferentFiletype_ShouldOnlyShowKeybindingWithoutFiletype()
-    let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION, self.menu)
+    let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION)
     let l:sub_keybindings = self.givenKeybindings(l:keybinding)
     let l:sub_filetype_keybindings = self.givenFiletypeKeybindings(s:FILETYPE, l:keybinding)
 
     execute 'setlocal filetype='.s:OTHER_FILETYPE
-    call l:keybinding.execute()
+    call l:keybinding.execute(self.menu)
 
     let l:actual_keybindings = self.menu.showed_args['keybindings'] 
     for sub_keybinding in l:sub_keybindings

@@ -68,7 +68,7 @@ function! s:VMenu.execute_keybinding() abort
 
     let l:keybinding = self.keybindings[l:user_input]
     try
-        call l:keybinding.execute()
+        call l:keybinding.execute(self)
     catch
         echo '['.l:keybinding.description.'] Failed : '.v:exception
     endtry

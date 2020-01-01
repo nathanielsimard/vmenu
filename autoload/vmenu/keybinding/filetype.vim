@@ -1,8 +1,8 @@
 " Filetype Keybinding Class
 " Category keybinding aware of current filetype
 let s:FiletypeKeybinding={}
-function! s:FiletypeKeybinding.new(key, description, menu) abort
-    let l:keybinding = vmenu#keybinding#category#new(a:key, a:description, a:menu)
+function! s:FiletypeKeybinding.new(key, description) abort
+    let l:keybinding = vmenu#keybinding#category#new(a:key, a:description)
     let l:keybinding.filetype_keybindings = {}
     return extend(l:keybinding, copy(self))
 endfunction
@@ -15,7 +15,7 @@ function! s:FiletypeKeybinding.add_filetype(filetype, keybinding) abort
     let self.filetype_keybindings[a:filetype][a:keybinding.key] = a:keybinding
 endfunction
 
-function! s:FiletypeKeybinding.execute() abort
+function! s:FiletypeKeybinding.execute(menu) abort
     let l:current_filetype = self.current_filetype()
     let l:keybindings = copy(self.keybindings)
 
@@ -24,11 +24,11 @@ function! s:FiletypeKeybinding.execute() abort
     endif
 
     if l:keybindings ==# {}
-        call self.menu.close()
+        call a:menu.close()
         echo '['.self.description."] No keybindings for filetype '".l:current_filetype."'"
     endif
 
-    call self.menu.show(self.title(), l:keybindings)
+    call a:menu.show(self.title(), l:keybindings)
 endfunction
 
 function! s:FiletypeKeybinding.current_filetype() abort
@@ -44,7 +44,7 @@ function! s:FiletypeKeybinding.current_filetype() abort
     return l:filetype
 endfunction
 
-function! vmenu#keybinding#filetype#new(key, description, menu) abort
-    return s:FiletypeKeybinding.new(a:key, a:description, a:menu)
+function! vmenu#keybinding#filetype#new(key, description) abort
+    return s:FiletypeKeybinding.new(a:key, a:description)
 endfunction
 

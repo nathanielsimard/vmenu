@@ -10,7 +10,7 @@ function! s:Keybinding.new(key, description) abort
     return l:newKeybinding
 endfunction
 
-function! s:Keybinding.execute() abort
+function! s:Keybinding.execute(menu) abort
     throw 'Not Implemented'
 endfunction
 
