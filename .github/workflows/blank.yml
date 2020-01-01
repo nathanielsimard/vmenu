@@ -1,0 +1,19 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install python
+      run: apt install python3
+    - name: Install neovim
+      run: apt install neovim
+    - name: Install vim
+      run: apt install vim
+    - name: Vint
+      run: ./scripts/lint.sh
+    - name: Test
+      run: ./scripts/tests.sh
