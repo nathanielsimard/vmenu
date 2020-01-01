@@ -13,6 +13,10 @@ let s:Test = Test('Filetype Keybinding Test')
 function s:Test.before_each()
     let self.menu = g:FakeMenu.new()
     setlocal filetype=test
+    if !has('nvim')
+        " vint: -ProhibitSetNoCompatible
+        set nocompatible 
+    endif
 endfunction
 
 function s:Test.test_GivenKeybindingsWithoutFiletype_WhenExecute_ShouldAssignEachKeybindingToItsKey()
@@ -44,9 +48,11 @@ function s:Test.test_GivenPreviousFiletype_WhenCurrentFiletypeVMenu_ShouldReturn
     let l:keybinding = vmenu#keybinding#filetype#new(s:KEY, s:DESCRIPTION)
 
     execute 'setlocal filetype='.s:FILETYPE
-    split vmenu
-    wincmd j
     setlocal buftype=nofile
+    split vmenu
+    setlocal filetype=vmenu
+    setlocal buftype=nofile
+
     let l:filetype = l:keybinding.current_filetype()
     q
 

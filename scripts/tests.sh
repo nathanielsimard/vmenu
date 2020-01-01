@@ -11,5 +11,6 @@ if ! [ -x "$(command -v vunit)" ]; then
   rm -rf vunit
 fi
 
-vunit tests
+vunit tests --nvim
+vunit tests --vim
 
