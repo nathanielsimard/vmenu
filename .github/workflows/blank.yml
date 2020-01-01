@@ -7,13 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Install python
-      run: apt install python3
-    - name: Install neovim
-      run: apt install neovim
-    - name: Install vim
-      run: apt install vim
+    - uses: actions/setup-python@v1
+      with:
+        python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+        architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
     - name: Vint
       run: ./scripts/lint.sh
-    - name: Test
-      run: ./scripts/tests.sh
+
