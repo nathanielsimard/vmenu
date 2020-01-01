@@ -1,41 +1,32 @@
-" Menu Options
-let g:vmenu#type='floating'
-let g:vmenu#show = 1
-let g:vmenu#delay = 300
-
-" Global Menu State
-"
-" INACTIVE: The user is not navigating the keybindings.
-" SHOWING: The user is navigating the keybindings with a visible menu.
-" HIDING: The user is navigating the keybindings with an invisible menu.
-let g:vmenu#STATE_INACTIVE='inactive'
-let g:vmenu#STATE_SHOWING='showing'
-let g:vmenu#STATE_HIDING='hiding'
-
 " User can interup the menu with <ESC>
 let s:UserInteruptionException='User Interuption Exception'
 
+" Global Menu State
+let s:STATE_INACTIVE='inactive'
+let s:STATE_SHOWING='showing'
+let s:STATE_HIDING='hiding'
+
 " Menu Class
-let s:Menu={}
-function! s:Menu.new() abort
+let s:VMenu={}
+function! s:VMenu.new() abort
     let l:newMenu = copy(self)
     let l:newMenu.timer_id = -1
-    let l:newMenu.state = g:menu#STATE_INACTIVE
+    let l:newMenu.state = s:STATE_INACTIVE
     let l:newMenu.current_window = {}
     let l:newMenu.title = ''
     let l:newMenu.keybindings = {}
     return l:newMenu
 endfunction
 
-function! s:Menu.show(title, keybindings) abort
+function! s:VMenu.show(title, keybindings) abort
     let self.title = a:title
     let self.keybindings = a:keybindings
 
-    if self.state == g:menu#STATE_SHOWING
+    if self.state == s:STATE_SHOWING
         call self.draw()
     else
-        let self.state = g:menu#STATE_HIDING
-        let self.timer_id = timer_start(g:menu#delay, self.show_after_timer)
+        let self.state = s:STATE_HIDING
+        let self.timer_id = timer_start(g:vmenu#delay, self.show_after_timer)
     endif
 
     try
@@ -49,12 +40,12 @@ function! s:Menu.show(title, keybindings) abort
     endtry
 endfunction
 
-function! s:Menu.close() abort
-    let self.state = g:menu#STATE_INACTIVE
+function! s:VMenu.close() abort
+    let self.state = s:STATE_INACTIVE
     call self.close_window()
 endfunction
 
-function! s:Menu.close_window() abort
+function! s:VMenu.close_window() abort
     if self.current_window !=# {}
         call self.current_window.close()
         let self.current_window = {}
@@ -62,14 +53,14 @@ function! s:Menu.close_window() abort
 endfunction
 
 
-function! s:Menu.show_after_timer(timer_id) abort
-    if self.timer_id == a:timer_id && self.state == g:menu#STATE_HIDING
-        let self.state = g:menu#STATE_SHOWING
+function! s:VMenu.show_after_timer(timer_id) abort
+    if self.timer_id == a:timer_id && self.state == s:STATE_HIDING
+        let self.state = s:STATE_SHOWING
         call self.draw()
     endif
 endfunction
 
-function! s:Menu.execute_keybinding() abort
+function! s:VMenu.execute_keybinding() abort
     let l:user_input = self.read_user()
     while !has_key(self.keybindings, l:user_input)
         let l:user_input = self.read_user()
@@ -77,13 +68,13 @@ function! s:Menu.execute_keybinding() abort
 
     let l:keybinding = self.keybindings[l:user_input]
     try
-        call l:keybinding.execute()
+        call l:keybinding.execute(self)
     catch
         echo '['.l:keybinding.description.'] Failed : '.v:exception
     endtry
 endfunction
 
-function! s:Menu.read_user() abort
+function! s:VMenu.read_user() abort
     let l:user_input = getchar()
     if l:user_input == 27 "Escape caracter number
         throw s:UserInteruptionException
@@ -92,8 +83,8 @@ function! s:Menu.read_user() abort
     return nr2char(l:user_input)
 endfunction
 
-function! s:Menu.draw() abort
-    if g:menu#show !=# 1
+function! s:VMenu.draw() abort
+    if g:vmenu#show !=# 1
         return
     endif
 
@@ -128,7 +119,7 @@ function! s:Menu.draw() abort
     endif
 
     call self.close_window()
-    if g:menu#type ==# 'floating'
+    if g:vmenu#type ==# 'floating'
         let self.current_window = s:FloatingWindow.new(l:text)
     else
         let self.current_window = s:BufferWindow.new(l:text)
@@ -173,7 +164,7 @@ function! s:BufferWindow.open() abort
     execute 'split '.self.name
     let self.win = win_getid()
     wincmd J
-    setlocal filetype=keybindingMenu
+    setlocal filetype=vmenu
     setlocal buftype=nofile
     setlocal norelativenumber
     setlocal nonumber
@@ -207,7 +198,7 @@ function! s:FloatingWindow.open() abort
     let self.win = nvim_open_win(l:buf, v:true, opts)
     call setline(1, self.text)
 
-    setlocal filetype=keybindingMenu
+    setlocal filetype=vmenu
     setlocal buftype=nofile
     setlocal norelativenumber
     setlocal nonumber
@@ -282,5 +273,9 @@ function! s:sort_keybindings(keybindings) abort
     endfor
 
     return l:keybindings_command + l:keybindings_category
+endfunction
+
+function! vmenu#new() abort
+    return s:VMenu.new()
 endfunction
 

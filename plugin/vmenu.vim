@@ -5,10 +5,13 @@
 "=============================================================================
 
 if exists('g:loaded_vmenu_plugin')
-    echo 'VMenu Plugin-Loaded'
     finish
 endif
-
-echo 'Plugin-Loading VMenu ...'
 let g:loaded_vmenu_plugin = 1
+
+" Menu Options
+let g:vmenu#type='floating'
+let g:vmenu#show = 1
+let g:vmenu#delay = 300
+
 
