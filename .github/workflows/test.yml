@@ -1,0 +1,20 @@
+name: CI
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-python@v1
+      with:
+        python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+        architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+    - name: Install Dependencies
+      run: ./scripts/install-ci-dependencies.sh
+    - name: Lint
+      run: ./scripts/lint.sh
+    - name: Tests
+      run: ./scripts/tests.sh
+
