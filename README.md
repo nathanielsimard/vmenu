@@ -63,6 +63,18 @@ Also, we must not forget to add the new category keybinding to the root.
 call g:keybindings_root.add(g:keybindings_buffer)
 ```
 
+It is possible to have category keybindings that are aware of the current filetype to only show the appropriate keybindings.
+
+```vim
+let g:keybindings_refactor = vmenu#keybinding#filetype#new('r', 'Refactoring')
+call g:keybindings_refactor.add(vmenu#keybinding#command#new('a', 'Alway visible', 'AlwaysVisibleCommand'))
+call g:keybindings_refactor.add_filetype('python', vmenu#keybinding#command#new('f', 'Format File', 'PythonFormaterCommand'))
+call g:keybindings_refactor.add_filetype('c', vmenu#keybinding#command#new('f', 'Format File', 'CFormaterCommand'))
+...
+```
+
+In this example, the `Format File` option will only be displayed on `python` and `c` files and use the appropriate formater for each filetype.
+
 ## Limitations
 
 In order to have zero side-effect with other keybindings, the implementation does not use `map`, `nmap`, etc.
