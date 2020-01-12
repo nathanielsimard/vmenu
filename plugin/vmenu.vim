@@ -14,4 +14,3 @@ let g:vmenu#type='floating'
 let g:vmenu#show = 1
 let g:vmenu#delay = 300
 
-
