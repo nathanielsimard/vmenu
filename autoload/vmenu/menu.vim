@@ -8,7 +8,7 @@ let s:STATE_HIDING='hiding'
 
 " Menu Class
 let s:Menu={}
-function! s:Menu.new(delay) abort
+function! s:Menu.new() abort
     let l:newMenu = copy(self)
     let l:newMenu.timer_id = -1
     let l:newMenu.state = s:STATE_INACTIVE
