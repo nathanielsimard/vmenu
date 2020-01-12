@@ -24,14 +24,75 @@ set nocompatible
 ## Usage
 
 We are building a graph that can be navigated with keybindings.
+First, we need to define what keybinding we will use to show the vmenu.
 
-### Functional API
+```vim
+nnoremap <silent> <Space> :call vmenu#show()<CR>
+```
 
-Not implemented.
+There is two things that we can do, add a category to show more keybindings or add directly a keybinding that executes a command.
+We can start be defining some categories.
+
+```vim
+let g:vmenu_buffer = vmenu#category('b', 'Buffer')
+let g:vmenu_window = vmenu#category('w', 'Window')
+let g:vmenu_help = vmenu#category('h', 'Help')
+```
+
+The first argument is the key that is used to open the menu and the second argument is the description. 
+It is possible to add a menu into another menu to create submenu by adding the `parent` option.
+
+```vim
+let g:vmenu_help_doc = vmenu#category('d', 'Documentation', { 'parent': g:vmenu_help})
+```
+
+Now, we probably want to define some commands.
+
+```vim
+call vmenu#commands([
+            \['Q', 'Quit', 'qa'],
+            \['s', 'Save File', 'w'],
+            \['S', 'Save All Files', 'wa'],
+            \["'", 'Terminal', 'terminal']
+        \])
+```
+
+Each keybinding is defined by a list of 3 items: the key, the description and the command in order.
+But we also want to add some keybindings into the categories we defined above.
+
+```vim
+call vmenu#commands([
+            \['q', 'Quit Window', 'q'],
+            \['L', 'Add Vertical Space', 'vertical resize +5'],
+            \['H', 'Remove Vertical Space', 'vertical resize -5'],
+            \['J', 'Add Horizontal Space', 'res +5'],
+            \['K', 'Remove Horizontal Space', 'res -5'],
+            \['h', 'Focus Left', 'wincmd h'],
+            \['j', 'Focus Down',  'wincmd j'],
+            \['k', 'Focus Top',  'wincmd k'],
+            \['l', 'Focus Right',  'wincmd l'],
+            \['v', 'Split Vertical',  'call VerticalSplit()'],
+            \['b', 'Split Horizontal',  'call HorizontalSplit()']
+        \], {
+            \'parent': g:vmenu_window
+        \})
+```
+
+The keybindings without the `parent` option will be available at the root of the menu.
+It is also possible to add some keybindings that will only be active for a specific filetype.
+
+```vim
+call vmenu#commands([
+            \['g', 'Generate Doc', 'Pydocstring']
+        \], {
+            \'parent': g:vmenu_help_doc,
+            \'filetype': 'python'
+        \})
+```
 
 ### Object Oriented API
 
-This API is the most flexible one, each keybinding is an object.
+It is possible to directly use the keybinding objects to build the menu.
 First, we can define the root and the native vim keybinding to show the vmenu.
 
 ```vim
