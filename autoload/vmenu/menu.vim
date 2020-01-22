@@ -244,8 +244,8 @@ endfunction
 
 function! s:create_keybinding_text(keybinding, tag_length) abort
     let l:key = a:keybinding.key
-    if l:key ==# " "
-        let l:key = "<space>"
+    if l:key ==# ' '
+        let l:key = '<space>'
     endif
 
     let l:text = ' ['.l:key.'] '.a:keybinding.description
