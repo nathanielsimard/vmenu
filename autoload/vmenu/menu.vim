@@ -243,7 +243,12 @@ function! s:text_padding(tag_length, number_keybindings, number_keybindings_per_
 endfunction
 
 function! s:create_keybinding_text(keybinding, tag_length) abort
-    let l:text = ' ['.a:keybinding.key.'] '.a:keybinding.description
+    let l:key = a:keybinding.key
+    if l:key ==# " "
+        let l:key = "<space>"
+    endif
+
+    let l:text = ' ['.l:key.'] '.a:keybinding.description
     let l:padding = a:tag_length - len(l:text)
 
     while l:padding >= 0
